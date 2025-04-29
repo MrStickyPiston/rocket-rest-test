@@ -5,18 +5,24 @@ edition = "2024"
 
 [dependencies]
 serde = "1.0.219"
-shuttle-rocket = "0.53.0"
 shuttle-runtime = "0.53.0"
 
 [dependencies.sqlx]
-version = "^0.7"
+version = "^0.8"
 features = []
 
+[dependencies.shuttle-rocket]
+git = "https://github.com/MrStickyPiston/shuttle-rocket-git.git"
+branch = "main"
+package = "shuttle-rocket"
 
 [dependencies.rocket]
-version = "0.5"
+git = "https://github.com/rwf2/Rocket.git"
+branch = "master"
 features = ["json"]
 
 [dependencies.rocket_db_pools]
-version = "0.1.0"
+git = "https://github.com/rwf2/Rocket.git"
+branch = "master"
+package = "rocket_db_pools"
 features = ["sqlx_sqlite"]
