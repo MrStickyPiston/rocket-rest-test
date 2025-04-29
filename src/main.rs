@@ -21,10 +21,13 @@ pub struct NounRootsTable {
     pub metadata: serde_json::Value,
 }
 
-
-#[get("/")]
-fn index() -> Json<Response<String>> {
-    Json(Response{value: "test".to_string()})
+#[derive(Deserialize)]
+pub struct CreateRoot {
+	pub root: String,
+	pub is_regular: bool,
+	pub conjugation_group: String,
+    	pub gender: i64,
+   	pub metadata: serde_json::Value,
 }
 
 #[get("/")]
@@ -36,9 +39,24 @@ async fn get_roots(state: &State<AppState>) -> Option<Json<Response<Vec<NounRoot
         .ok()
 }
 
+#[post("/", data="<root>", format = "json")]
+async fn create_root(state: &State<AppState>, root: Json<CreateRoot>) -> Json<Response<String>> {
+    sqlx::query("INSERT INTO noun_roots_table (root, is_regular, conjugation_group, gender, metadata) VALUES ($1, $2, $3, $4, $5);")
+	.bind(&root.root)                // Bind the root field
+	.bind(root.is_regular)           // Bind the is_regular field
+    	.bind(&root.conjugation_group)   // Bind the conjugation_group field
+    	.bind(root.gender)                // Bind the gender field
+    	.bind(&root.metadata)             // Bind the metadata field
+
+        .fetch_one(&state.pool).await
+        .ok();
+
+	Json(Response{value: "Root created".to_string()})
+}
+
 #[get("/<id>")]
 async fn get_root(state: &State<AppState>, id: i64) -> Option<Json<Response<NounRootsTable>>> {
-    sqlx::query_as("SELECT * FROM noun_roots_table WHERE id = ?").bind(id)
+    sqlx::query_as("SELECT * FROM noun_roots_table WHERE id = $1;").bind(id)
         .fetch_one(&state.pool).await
 	.map(|v| {Response{value: v}})
 	.map(Json)
@@ -56,11 +74,15 @@ async fn rocket(
 	)]
 	pool: sqlx::PgPool
 ) -> shuttle_rocket::ShuttleRocket {
+	sqlx::migrate!()
+        	.run(&pool)
+        	.await
+        	.expect("Failed to run migrations");
+
 	let state = AppState { pool };
  
 	let rocket = rocket::build()
-		.mount("/", routes![index])
-		.mount("/roots/", routes![get_roots, get_root])
+		.mount("/roots/", routes![get_roots, get_root, create_root])
 		.manage(state);
 	
 	Ok(rocket.into())
