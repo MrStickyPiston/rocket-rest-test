@@ -51,7 +51,7 @@ async fn get_root(mut db: Connection<Db>, id: i64) -> Option<Json<Response<NounR
 }
 
 #[shuttle_runtime::main]
-async fn rocket() -> shuttle_rocket::ShuttleRocket {
+async fn rocket(#[shuttle_shared_db::Postgres] pool: sqlx::PgPool) -> shuttle_rocket::ShuttleRocket {
     let rocket = rocket::build()
 	.mount("/", routes![index])
 	.mount("/roots/", routes![get_roots, get_root])
