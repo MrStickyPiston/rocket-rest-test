@@ -1,28 +1,17 @@
 [package]
 name = "rest-test"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 
 [dependencies]
-serde = "1.0.219"
 shuttle-runtime = "0.53.0"
-
-[dependencies.sqlx]
-version = "^0.8"
-features = []
-
-[dependencies.shuttle-rocket]
-git = "https://github.com/MrStickyPiston/shuttle-rocket-git.git"
-branch = "main"
-package = "shuttle-rocket"
-
-[dependencies.rocket]
-git = "https://github.com/rwf2/Rocket.git"
-branch = "master"
-features = ["json"]
-
-[dependencies.rocket_db_pools]
-git = "https://github.com/rwf2/Rocket.git"
-branch = "master"
-package = "rocket_db_pools"
-features = ["sqlx_sqlite"]
+serde = "1.0.148"
+shuttle-shared-db = { version = "0.53.0", features = ["postgres", "sqlx"] }
+tokio = "1.26.0"
+shuttle-rocket = "0.53.0"
+rocket_db_pools = { version = "0.2.0", features = [
+    "sqlx_macros",
+    "sqlx_postgres",
+] }
+rocket = { version = "0.5.1", features = ["json"] }
+sqlx = "0.8.5"
