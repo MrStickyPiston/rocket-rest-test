@@ -1,2 +1,2 @@
 [default.databases]
-db = { url = "db.sqlite" }
+db = { url = "postgresql://user@127.0.0.1:5432/rest-test" }

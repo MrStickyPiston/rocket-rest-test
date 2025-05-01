@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 shuttle-runtime = "0.53.0"
 serde = "1.0.148"
-shuttle-shared-db = { version = "0.53.0", features = ["postgres", "sqlx"] }
+#shuttle-shared-db = { version = "0.53.0", features = ["postgres", "sqlx"] }
 tokio = "1.26.0"
 shuttle-rocket = "0.53.0"
 rocket_db_pools = { version = "0.2.0", features = [
@@ -14,4 +14,4 @@ rocket_db_pools = { version = "0.2.0", features = [
     "sqlx_postgres",
 ] }
 rocket = { version = "0.5.1", features = ["json"] }
-sqlx = "0.8.5"
+sqlx = "0.7.4"
